@@ -1,0 +1,4 @@
+
+densenet_27   0.8855
+densenet_28   0.8173
+vgg_29   0.9222

@@ -1,0 +1,77 @@
+技巧
+
+模型部分：
+工程步骤
+搭建网络后先testUnit没有bug
+再小数据集往过拟合跑
+再正式数据进行调参
+
+
+路线计划
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+part1
+
+1.网络结构
+
+
+to do
+2.数据部分
+    数据描述:
+
+    2.1不平衡问题：
+        借鉴:https://zhuanlan.zhihu.com/p/23444244
+        核心思想 训练集和验证集分布一致
+            train平衡 & val 平衡 -->效果
+            train平衡 & val 不平衡-->效果
+            train不平衡 & val 不平衡 -->效果
+
+    2.2数据shuffle
+    shuffle越充分越好,但是大数据情况,不可能全量shuffle,所以一个思路是
+        使用大数据工具将数据先混洗
+        在每个epoch再混洗
+        1.I would highly suggest to shuffle the data set before creating the TFrecords, and keep a small buffer size.
+        (参考:https://stackoverflow.com/questions/47781375/tensorflow-dataset-shuffle-large-dataset?rq=1
+              https://github.com/tensorflow/tensorflow/issues/14857
+
+    2.3 I/O 太慢了 ETL过程, extract, transform, load
+
+        (参考:http://d0evi1.com/tensorflow/datasets_performance/
+        https://www.jianshu.com/p/f580f4fc2ba0
+
+        2.3.1数据部分
+            将resize的步骤先提前做好,在线训练时不用resize.
+
+        2.3.2pipline
+            *数据全部读入内存/或使用genorator
+            *对于tf.placeholder优化--->使用dataset api(placeholder 和 queue是同一个时期两种方法)
+             placeholder 好像是属于feed dict的方法
+            *对于tf.dataset.batch()优化:增加dataset.prefetch()
+            *tf.dataset.map()优化:并发多核优化
+
+------------------------------------------------
+一些tricks
+1. 训练集randomResizeCrop 验证集centerCrop
+2. tenCrop 或者 fiveCrop很work--->针对val的过程
+3. fine-tune 不管在什么任务上作为pre-train model效果都很好
+4. 初始化很重要,包括fine-tune或者Xavier初始化
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+part2 transferLearning
+
+1.Chexnet 是multi label问题 所以最后一成改成了 softmax+ BCEloss(对应的chestray14数据集的标签是14维度而非15维)
+不能够再使用(one-hot + 交叉熵了)
+
+2. finetune densenet121-chestRay14 (14种病)-->densenet121-chestRay14(4种病)
+
+
+
+
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+part3
+GAN ? bigGan
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
