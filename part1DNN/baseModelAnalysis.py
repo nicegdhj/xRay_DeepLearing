@@ -25,8 +25,7 @@ import baseModelAnalysisDataset
 os.environ['CUDA_VISIBLE_DIVICE'] = '1'
 
 
-
-def getDataLoader(data, isMyImagePathDataLoader = False ):
+def getDataLoader(data, isMyImagePathDataLoader=False):
     '''
     获取dataLoader 和 label<-->label name
     '''
@@ -43,11 +42,10 @@ def getDataLoader(data, isMyImagePathDataLoader = False ):
     ])
 
     if isMyImagePathDataLoader:
-        datasetVal = baseModelAnalysisDataset.ImagePathDataset(path_1=data,  transform=transform_val)
+        datasetVal = baseModelAnalysisDataset.ImagePathDataset(path_1=data, transform=transform_val)
 
     else:
         datasetVal = datasets.ImageFolder(root=data, transform=transform_val)
-
 
     dataLoaderVal = DataLoader(datasetVal, batch_size=2, shuffle=False, num_workers=2,
                                pin_memory=True)
@@ -128,11 +126,11 @@ def get_cnf_matrix():
     获取混淆矩阵
     :return:
     """
-    data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/twoClasses_val'
+    data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/threeClasses_val'
 
     model_name = 'vgg'
-    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/vgg_29_ckpt.pkl'
-    num_classes = 2
+    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/vgg_30_ckpt.pkl'
+    num_classes = 3
 
     dataLoader, class_to_idx = getDataLoader(data)  # class_to_idx--> [[name], [index]]
     # 2和3分类是需要用到reverse，为了好看。 4分类时候不需要
@@ -149,23 +147,23 @@ def get_cnf_matrix():
     plt.figure()
     plot_confusion_matrix(cnf_matrix, classes=class_to_idx[0],
                           title='Confusion matrix, without normalization')
-    plt.savefig('/home/njuciairs/Hejia/xRayProject/part1DNN/cnf_matrix/twoStep/vgg_1_num.png')
+    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/vgg_2_num.png')
     plt.figure()
     plot_confusion_matrix(cnf_matrix, classes=class_to_idx[0], normalize=True,
                           title='Normalized confusion matrix')
 
     # plt.show()
-    plt.savefig('/home/njuciairs/Hejia/xRayProject/part1DNN/cnf_matrix/twoStep/vgg_1_rate.png')
+    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/vgg_2_rate.png')
 
 
 def get_image_score():
     """
-    获取每张图片的打分,格式：图片名字 分类器打分1，分类器打分2,... 标签 原始预测类
+    获取每张图片的打分,格式：图片名字 标签 原始预测类 分类器打分1，分类器打分2,...
     """
-    data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/twoClasses_val'
-    model_name = 'densenet'
-    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/densenet_27_ckpt.pkl'
-    num_classes = 2
+    data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/threeClasses_val'
+    model_name = 'vgg'
+    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/vgg_30_ckpt.pkl'
+    num_classes = 3
 
     dataLoader, class_to_idx = getDataLoader(data, isMyImagePathDataLoader=True)
 
@@ -196,14 +194,14 @@ def get_image_score():
         y_predict.extend(preds.cpu().numpy())
         y_true.extend(labels.cpu().numpy())
         y_image_path.extend(path)
-        y_predict_score.extend(outputs)
+        y_predict_score.extend(outputs.detach().cpu().numpy().tolist())
 
-    record_csv = pd.DataFrame({'path': y_image_path, 'score': y_predict_score, 'label':y_true, 'predict':y_predict})
-    record_csv.to_csv('/home/njuciairs/Hejia/xRayLogs/2classes_record.csv',encoding='utf-8')
-
+    record_csv = pd.DataFrame({'path': y_image_path, 'label': y_true, 'predict': y_predict, 'score': y_predict_score})
+    record_csv.to_csv(
+        '/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/record2step/3classes_record_vgg30.csv',
+        encoding='utf-8')
 
 
 if __name__ == '__main__':
-
-   get_image_score()
-   #  get_cnf_matrix()
+    get_image_score()
+    # get_cnf_matrix()
