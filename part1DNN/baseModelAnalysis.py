@@ -17,6 +17,7 @@ from torchvision import models, transforms, datasets
 from torch.utils.data import DataLoader
 from sklearn.metrics import confusion_matrix
 import pandas as pd
+from sklearn.metrics import recall_score
 
 from utils import initialize_model
 import flags
@@ -85,6 +86,9 @@ def confuseMatrix(dataLoader, model_name, ckpt_path, labels_name, num_classes):
         _, preds = torch.max(outputs, 1)
         y_predict.extend(preds.cpu().numpy())
         y_true.extend(labels.cpu().numpy())
+
+    epoch_acc = recall_score(y_true, y_predict, average='macro')
+    print(epoch_acc)
     cnf_matrix = confusion_matrix(y_true, y_predict, labels=labels_name)
     return cnf_matrix
 
@@ -128,14 +132,17 @@ def get_cnf_matrix():
     """
     data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/threeClasses_val'
 
-    model_name = 'vgg'
-    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/vgg_30_ckpt.pkl'
+    model_name = 'densenet'
+    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/densenet_28_ckpt.pkl'
     num_classes = 3
 
     dataLoader, class_to_idx = getDataLoader(data)  # class_to_idx--> [[name], [index]]
+
     # 正负分类是需要用到reverse，为了好看。 数字多分分类分类时候不需要
-    # class_to_idx[0].reverse()
-    # class_to_idx[1].reverse()
+    if num_classes == 2:
+        class_to_idx[0].reverse()
+        class_to_idx[1].reverse()
+
     print(class_to_idx)
 
     cnf_matrix = confuseMatrix(dataLoader, model_name, model_ckpt, class_to_idx[1], num_classes)
@@ -147,13 +154,13 @@ def get_cnf_matrix():
     plt.figure()
     plot_confusion_matrix(cnf_matrix, classes=class_to_idx[0],
                           title='Confusion matrix, without normalization')
-    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/vgg_2_num.png')
+    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/densenet_2_num.png')
     plt.figure()
     plot_confusion_matrix(cnf_matrix, classes=class_to_idx[0], normalize=True,
                           title='Normalized confusion matrix')
 
     # plt.show()
-    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/vgg_2_rate.png')
+    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/densenet_2_rate.png')
 
 
 def get_image_score():
@@ -161,8 +168,8 @@ def get_image_score():
     获取每张图片的打分,格式：图片名字 标签 原始预测类 分类器打分1，分类器打分2,...
     """
     data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/fourClasses_val'
-    model_name = 'vgg'
-    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/vgg_30_ckpt.pkl'
+    model_name = 'densenet'
+    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/densenet_28_ckpt.pkl'
     num_classes = 3
 
     dataLoader, class_to_idx = getDataLoader(data, isMyImagePathDataLoader=True)
@@ -198,10 +205,10 @@ def get_image_score():
 
     record_csv = pd.DataFrame({'path': y_image_path, 'label': y_true, 'predict': y_predict, 'score': y_predict_score})
     record_csv.to_csv(
-        '/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/record2step/4classesData_3classes_record_vgg30.csv',
+        '/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/record2step/4classesData_3classes_record_densenet28.csv',
         encoding='utf-8')
 
 
 if __name__ == '__main__':
-    get_image_score()
     # get_cnf_matrix()
+    get_image_score()
