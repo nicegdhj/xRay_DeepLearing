@@ -196,10 +196,10 @@ optimizer_ft = optim.SGD(params_to_update, lr=flags.lr, momentum=flags.momentum)
 scheduler = StepLR(optimizer_ft, step_size=flags.step_size, gamma=flags.rate, )
 
 # 加入权重
-weight1 = torch.Tensor([22, 23, 23])  # 混淆矩阵权重
-weight2 = torch.Tensor([1, 2, 3])  # 数据比例权重
-criterion = nn.CrossEntropyLoss(weight=weight2).cuda()
-# criterion = nn.CrossEntropyLoss()
+# weight1 = torch.Tensor([22, 23, 23])  # 混淆矩阵权重
+# weight2 = torch.Tensor([1, 2, 3])  # 数据比例权重
+# criterion = nn.CrossEntropyLoss(weight=weight2).cuda()
+criterion = nn.CrossEntropyLoss()
 
 # Train and evaluate
 val_acc, val_loss, train_acc, train_loss = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft,

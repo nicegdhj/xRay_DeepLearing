@@ -21,7 +21,7 @@ from sklearn.metrics import recall_score
 # from torchvision import get_image_backend
 # print(get_image_backend())
 
-a = {10:1, 20:2}
-for k,v in a.items():
-    print(k)
-    print(v)
+for i in np.arange(0.05, 1, 0.05):
+    i = '%.2f'%i
+    print(type(i))
+    print(i)
