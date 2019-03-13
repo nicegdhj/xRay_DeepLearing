@@ -18,7 +18,7 @@ from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import StepLR
 from sklearn.metrics import recall_score
 
-os.environ['CUDA_VISIBLE_DIVICE']='1'
+os.environ['CUDA_VISIBLE_DIVICE'] = '1'
 
 import flags
 import utils
@@ -157,7 +157,7 @@ transform_train = transforms.Compose([
     transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
 ])
 transform_test = transforms.Compose([
-    #256-->224, 332-->299是 inception的
+    # 256-->224, 332-->299是 inception的
     transforms.Resize(256),
     transforms.TenCrop(input_size),
     transforms.Lambda(lambda crops: torch.stack([transforms.ToTensor()(crop) for crop in crops])),
@@ -194,7 +194,12 @@ else:
 
 optimizer_ft = optim.SGD(params_to_update, lr=flags.lr, momentum=flags.momentum)
 scheduler = StepLR(optimizer_ft, step_size=flags.step_size, gamma=flags.rate, )
-criterion = nn.CrossEntropyLoss()
+
+# 加入权重
+weight1 = torch.Tensor([22, 23, 23])  # 混淆矩阵权重
+weight2 = torch.Tensor([1, 2, 3])  # 数据比例权重
+criterion = nn.CrossEntropyLoss(weight=weight2).cuda()
+# criterion = nn.CrossEntropyLoss()
 
 # Train and evaluate
 val_acc, val_loss, train_acc, train_loss = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft,

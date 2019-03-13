@@ -133,9 +133,9 @@ def get_cnf_matrix():
     num_classes = 3
 
     dataLoader, class_to_idx = getDataLoader(data)  # class_to_idx--> [[name], [index]]
-    # 2和3分类是需要用到reverse，为了好看。 4分类时候不需要
-    class_to_idx[0].reverse()
-    class_to_idx[1].reverse()
+    # 正负分类是需要用到reverse，为了好看。 数字多分分类分类时候不需要
+    # class_to_idx[0].reverse()
+    # class_to_idx[1].reverse()
     print(class_to_idx)
 
     cnf_matrix = confuseMatrix(dataLoader, model_name, model_ckpt, class_to_idx[1], num_classes)
@@ -160,7 +160,7 @@ def get_image_score():
     """
     获取每张图片的打分,格式：图片名字 标签 原始预测类 分类器打分1，分类器打分2,...
     """
-    data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/threeClasses_val'
+    data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/fourClasses_val'
     model_name = 'vgg'
     model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/vgg_30_ckpt.pkl'
     num_classes = 3
@@ -198,7 +198,7 @@ def get_image_score():
 
     record_csv = pd.DataFrame({'path': y_image_path, 'label': y_true, 'predict': y_predict, 'score': y_predict_score})
     record_csv.to_csv(
-        '/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/record2step/3classes_record_vgg30.csv',
+        '/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/record2step/4classesData_3classes_record_vgg30.csv',
         encoding='utf-8')
 
 

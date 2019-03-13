@@ -7,15 +7,13 @@ Description:  训练的超参数
 
 """
 
-train_data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/twoClasses_train'
-val_data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/twoClasses_val'
+train_data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/threeClasses_train'
+val_data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/threeClasses_val'
 ckpt_path = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt'
 log_path = '/home/njuciairs/Hejia/local_LogAndCkpt/logs'
 
+num_classes = 3
 
-
-
-num_classes = 2
 batch_size = 32
 # val  使用了tencrop 显存不够
 batch_size_val = 4
@@ -25,7 +23,7 @@ feature_extract = False
 
 gpu = "cuda"
 model_name = "vgg"  # Models to choose from [resnet, alexnet, vgg, squeezenet, densenet, inception]
-version = 29
+version = 32
 
 # rate 衰减率, step_size 多少衰减一次
 lr = 0.001
