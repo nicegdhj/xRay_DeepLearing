@@ -48,26 +48,24 @@ mpl.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显�
 #
 # plt.show()  # 显示窗口
 
-cm_resNet = [[0.82, 0.08, 0.10, 0.00], [0.01, 0.97, 0.01, 0.01], [0.11, 0.00, 0.89, 0.00], [0.00, 0.63, 0.00, 0.37]]
-cm_resNet = np.array(cm_resNet)
-cm_vgg = np.array(
-    [[0.88, 0.00, 0.12, 0.00], [0.02, 0.96, 0.01, 0.01], [0.11, 0.00, 0.89, 0.00], [0.00, 0.64, 0.08, 0.28]])
-
-cm_densenet = np.array(
-    [[0.85, 0.06, 0.09, 0.00], [0.01, 0.96, 0.01, 0.03], [0.06, 0.05, 0.87, 0.02], [0.00, 0.59, 0.00, 0.41]])
+cm1 = np.array([[0.95, 0.05], [0.05, 0.95]])
+cm2 = np.array([[0.99, 0.00, 0.01], [0.12, 0.88, 0.00], [0.42, 0.00, 0.58]])
+cm3 = np.array([[0.98, 0.00, 0.02], [0.08, 0.92, 0.00], [0.42, 0.00, 0.58]])
 
 
-def plot_confusion_matrix(cm1, cm2, cm3, classes, normalize=True, title='Confusion matrix', cmap=plt.cm.Blues):
+def plot_confusion_matrix(cm1, cm2, normalize=True, title='Confusion matrix', cmap=plt.cm.Blues):
     """
     This function prints and plots the confusion matrix.
     Normalization can be applied by setting `normalize=True`.
     """
 
     plt.figure(num='astronaut', figsize=(10, 5))  # 创建一个名为astronaut的窗口,并设置大小
+    classes = ['positive', 'negative']
+    title = '2-step阶段1'
 
     plt.subplot(1, 3, 1)
     plt.imshow(cm1, interpolation='nearest', cmap=cmap)
-    plt.title('Vgg16')
+    plt.title(title)
     # plt.colorbar()
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes)
@@ -87,9 +85,10 @@ def plot_confusion_matrix(cm1, cm2, cm3, classes, normalize=True, title='Confusi
     ####
 
     plt.subplot(1, 3, 2)
+    classes = [1, 2, 3]
+    title = '2-step阶段2'
     plt.imshow(cm2, interpolation='nearest', cmap=cmap)
-    plt.title('ResNet34')
-    # plt.colorbar()
+    plt.title(title)
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes)
     plt.yticks(tick_marks, classes)
@@ -109,7 +108,10 @@ def plot_confusion_matrix(cm1, cm2, cm3, classes, normalize=True, title='Confusi
 
     plt.subplot(1, 3, 3)
     plt.imshow(cm3, interpolation='nearest', cmap=cmap)
-    plt.title('DenseNet121')
+    classes = [1, 2, 3]
+    title = '2-step阶段2 代价敏感'
+
+    plt.title(title)
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes)
     plt.yticks(tick_marks, classes)
@@ -126,8 +128,8 @@ def plot_confusion_matrix(cm1, cm2, cm3, classes, normalize=True, title='Confusi
     plt.tight_layout()
 
     # plt.colorbar()
+    plt.savefig('D:/workCode/xRay/xRay_DeepLearing/part1DNN/cnf_matrix/2_step_without_sensitive.png')
     plt.show()
-    plt.savefig('D:/workCode/xRay/dataDemo/cnf_matrix/baseModel_4classes/cnf_all.png')
 
 
-plot_confusion_matrix(cm_vgg, cm_resNet, cm_densenet, classes=['0', '1', '2', '3'])
+plot_confusion_matrix(cm1, cm2)
