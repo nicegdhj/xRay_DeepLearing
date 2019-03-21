@@ -133,7 +133,7 @@ def get_cnf_matrix():
     data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/threeClasses_val'
 
     model_name = 'densenet'
-    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/densenet_28_ckpt.pkl'
+    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/densenet_33_ckpt.pkl'
     num_classes = 3
 
     dataLoader, class_to_idx = getDataLoader(data)  # class_to_idx--> [[name], [index]]
@@ -154,13 +154,13 @@ def get_cnf_matrix():
     plt.figure()
     plot_confusion_matrix(cnf_matrix, classes=class_to_idx[0],
                           title='Confusion matrix, without normalization')
-    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/densenet_2_num.png')
+    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/densenet_2_sensitive_num.png')
     plt.figure()
     plot_confusion_matrix(cnf_matrix, classes=class_to_idx[0], normalize=True,
                           title='Normalized confusion matrix')
 
     # plt.show()
-    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/densenet_2_rate.png')
+    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/densenet_2_sensitive_rate.png')
 
 
 def get_image_score():
@@ -169,7 +169,7 @@ def get_image_score():
     """
     data = '/home/njuciairs/Hejia/xRaydata/zipXrayImages/fourClasses_val'
     model_name = 'densenet'
-    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/densenet_28_ckpt.pkl'
+    model_ckpt = '/home/njuciairs/Hejia/local_LogAndCkpt/ckpt/densenet_33_ckpt.pkl'
     num_classes = 3
 
     dataLoader, class_to_idx = getDataLoader(data, isMyImagePathDataLoader=True)
@@ -205,10 +205,10 @@ def get_image_score():
 
     record_csv = pd.DataFrame({'path': y_image_path, 'label': y_true, 'predict': y_predict, 'score': y_predict_score})
     record_csv.to_csv(
-        '/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/record2step/4classesData_3classes_record_densenet28.csv',
+        '/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/record2step/4classesData_3classes_record_densenet33_sensitive.csv',
         encoding='utf-8')
 
 
 if __name__ == '__main__':
-    # get_cnf_matrix()
+    get_cnf_matrix()
     get_image_score()
