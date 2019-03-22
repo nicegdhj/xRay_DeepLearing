@@ -3,7 +3,7 @@
    Author:       Hejia
    Date:         19-1-6
 
-Description:  辅助工具,包括画曲线图,模型初始化
+Description:  模型初始化
 
 """
 import numpy as np
@@ -16,56 +16,8 @@ from torchvision import models, transforms, datasets
 from torch.utils.data import DataLoader
 from sklearn.metrics import confusion_matrix
 
-import flags
 
-plt.switch_backend('agg')
-
-
-def saveTrainCurve(val_acc, val_loss, train_acc, train_loss):
-    """
-    画训练曲线,并且保存训练曲线
-    """
-    num_epochs = flags.num_epochs
-
-    log_dir = os.path.join(flags.log_path, flags.model_vrsion)
-    if not os.path.isdir(log_dir):
-        os.mkdir(log_dir)
-
-    print(log_dir)
-    t_loss_file = os.path.join(log_dir, 'train_loss.pkl')
-    t_acc_file = os.path.join(log_dir, 'train_acc.pkl')
-    v_loss_file = os.path.join(log_dir, 'val_loss.pkl')
-    v_acc_file = os.path.join(log_dir, 'val_acc.pkl')
-
-    pickle.dump(train_loss, open(t_loss_file, 'wb'))
-    pickle.dump(train_acc, open(t_acc_file, 'wb'))
-    pickle.dump(val_loss, open(v_loss_file, 'wb'))
-    pickle.dump(val_acc, open(v_acc_file, 'wb'))
-
-    plt.figure(figsize=(10, 10))
-    plt.subplot(2, 1, 1)
-
-    plt.title(" Accuracy vs. Number of Training Epochs")
-    plt.xlabel("Training Epochs")
-    plt.ylabel(" Accuracy")
-    # plt.grid(axis="y")
-    plt.plot(range(1, num_epochs + 1), val_acc, label="validation")
-    plt.plot(range(1, num_epochs + 1), train_acc, label="train")
-    plt.ylim((0, 1.))
-    plt.xticks(np.arange(0, num_epochs, 10.0))
-    plt.legend()
-
-    plt.subplot(2, 1, 2)
-    plt.title(" Loss vs. Number of Training Epochs")
-    plt.xlabel("Training Epochs")
-    plt.ylabel(" Loss")
-    # plt.grid(axis="y", ls='--')
-    plt.plot(range(1, num_epochs + 1), val_loss, label="validation")
-    plt.plot(range(1, num_epochs + 1), train_loss, label="train")
-    plt.xticks(np.arange(0, num_epochs, 10.0))
-    plt.legend()
-    # plt.show()  # 展示
-    plt.savefig(os.path.join(log_dir, 'chart'))
+# plt.switch_backend('agg')
 
 
 def set_parameter_requires_grad(model, feature_extracting):

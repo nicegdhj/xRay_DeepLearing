@@ -22,8 +22,8 @@ batch_size_val = 4
 feature_extract = False
 
 gpu = "cuda"
-model_name = "vgg"  # Models to choose from [resnet, alexnet, vgg, squeezenet, densenet, inception]
-version = 32
+model_name = "densenet"  # Models to choose from [resnet, alexnet, vgg, squeezenet, densenet, inception]
+version = 33
 
 # rate 衰减率, step_size 多少衰减一次
 lr = 0.001

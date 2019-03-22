@@ -137,8 +137,6 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs=
     with open('./record.txt', 'a') as f:
         f.writelines(['\n', str(flags.model_vrsion), '   ', str(best_acc)])
 
-    # load best model weights
-    # model.load_state_dict(best_model_wts)
     return val_acc_history, val_loss_history, train_acc_history, train_loss_history
 
 
@@ -196,6 +194,7 @@ optimizer_ft = optim.SGD(params_to_update, lr=flags.lr, momentum=flags.momentum)
 scheduler = StepLR(optimizer_ft, step_size=flags.step_size, gamma=flags.rate, )
 
 # 加入权重
+
 # weight1 = torch.Tensor([22, 23, 23])  # 混淆矩阵权重
 # weight2 = torch.Tensor([1, 2, 3])  # 数据比例权重
 # criterion = nn.CrossEntropyLoss(weight=weight2).cuda()
