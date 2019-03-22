@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
    Author:       Hejia
-   Date:         19-1-21
+   Date:         19-3-5
 
-Description:  共享网络权重权重dataset, 修改自 torchvision.datasets.ImageFolder
+Description:  input dataloader，输入数据时包括 ：图片路径，图片，图片标签
+              修改自 torchvision.datasets.ImageFolder
 """
 
 import numpy as np
