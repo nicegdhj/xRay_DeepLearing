@@ -9,14 +9,14 @@ Description:
 将所用的数据按照类别分类，如标签为1的图片全部在“1”的文件夹下
 尘肺病数据原来一张大小约2M，进过压缩后大小在400k左右
 
-1.复制文件到一定的比例1:3
-    原始文件0,1,2,3期比例是300:2500:380:80
-
-2.将数据集按6:1分为训练集和测试集
-    a.先划分好train/vali(保证互相不重复)
+步骤：
+    a.先划分好train/vali(保证互相不重复)，
+        将数据集按6:1分为训练集和测试集
     b.复制扩充
-
-最后4类结果比例保持---->16:25:16:10
+        原始文件0,1,2,3期比例是300:2500:380:80
+        最后4类结果比例保持---->16:25:16:10
+    ** 要保留好copyBefore的数据集1与copyAfter数据集2，方便以后使用如part3
+    c.每张图片resize到600*600
 """
 
 import os
@@ -32,16 +32,13 @@ def splitTrainAndVal():
     将数据分隔成为训练集与验证集,无放回抽样,train:val = 6:1
     """
     # 远程
-    fromDir = '/root/Hejia/data/zipXrayImages'
-    toTrainDir = '/root/Hejia/data/zipXrayImages/train'
-    toValDir = '/root/Hejia/data/zipXrayImages/validation'
+    fromDir = 'D:/workCode/data/xRay/zipXrayImages'
+    toTrainDir = 'D:/workCode/data/xRay/dataset/withoutCopy/train'
+    toValDir = 'D:/workCode/data/xRay/dataset/withoutCopy/val'
 
-    # 本地
-    # fromDir = '/home/nicehjia/myProjects/xRay/xRayData/zipXrayImages'
-    # toTrainDir = '/home/nicehjia/myProjects/xRay/xRayData/zipXrayImages/train'
-    # toValDir = '/home/nicehjia/myProjects/xRay/xRayData/zipXrayImages/validation'
     labelDir = ['0', '1', '2', '3']
-    ratio = 1. / 7
+
+    ratio = 1. / 6 #后面重新做了一次数据集 train:val = 5:1
     for dir in labelDir:
         pathFrom = os.path.join(fromDir, dir)
         pathTrain = os.path.join(toTrainDir, dir)
@@ -133,16 +130,22 @@ def resizeImages(fromdir, todir):
 
 if __name__ == '__main__':
     # 均分
-    splitTrainAndVal()
-    print('---------------split done--------------------------')
+    # splitTrainAndVal()
+    # print('---------------split done--------------------------')
     #
-    overSampleImages('/root/Hejia/data/zipXrayImages/train')
-    print('---------------train set overSampling done--------------------------')
-    #
-    overSampleImages('/root/Hejia/data/zipXrayImages/validation')
-    print('---------------val set overSampling done--------------------------')
-    #
-    resizeImages('/root/Hejia/data/zipXrayImages/validation',
-                 '/root/Hejia/data/zipXrayImages/validation_resized')
-    resizeImages('/root/Hejia/data/zipXrayImages/train',
-                 '/root/Hejia/data/zipXrayImages/train_resized')
+    # overSampleImages('D:/workCode/data/xRay/dataset/copyAfter/train')
+    # print('---------------train set overSampling done--------------------------')
+    # # #
+    # overSampleImages('D:/workCode/data/xRay/dataset/copyAfter/val')
+    # print('---------------val set overSampling done--------------------------')
+    # #
+    resizeImages('D:/workCode/data/xRay/dataset/copyBefore/train',
+                 'D:/workCode/data/xRay/dataset/copyBefore/train_resized')
+    resizeImages('D:/workCode/data/xRay/dataset/copyBefore/val',
+                 'D:/workCode/data/xRay/dataset/copyBefore/val_resized')
+    print('---------------copyBefore overSampling  done--------------------------')
+    resizeImages('D:/workCode/data/xRay/dataset/copyAfter/train',
+                 'D:/workCode/data/xRay/dataset/copyAfter/train_resized')
+    resizeImages('D:/workCode/data/xRay/dataset/copyAfter/val',
+                 'D:/workCode/data/xRay/dataset/copyAfter/val_resized')
+    print('---------------copyAfter overSampling  done--------------------------')
