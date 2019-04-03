@@ -12,13 +12,14 @@ import cv2
 
 import utils
 
+
 class VGG(nn.Module):
     def __init__(self, ckpt_path, num_classes):
         super(VGG, self).__init__()
         # vgg_16bn
         model_ft, input_size = utils.initialize_model(model_name='vgg', num_classes=num_classes,
-                                                         feature_extract=False,
-                                                         use_pretrained=True)
+                                                      feature_extract=False,
+                                                      use_pretrained=True)
 
         # ckpt gpu->cpu
         model_ft.load_state_dict(torch.load(ckpt_path, map_location=lambda storage, loc: storage)['model'])
@@ -49,7 +50,6 @@ class VGG(nn.Module):
 
         # apply the remaining pooling
         x = self.max_pool(x)
-        x = x.view((1, -1))
         x = self.classifier(x)
         return x
 
@@ -66,8 +66,8 @@ class DenseNet(nn.Module):
     def __init__(self, ckpt_path, num_classes):
         super(DenseNet, self).__init__()
         model_ft, input_size = utils.initialize_model(model_name='densenet', num_classes=num_classes,
-                                                         feature_extract=False,
-                                                         use_pretrained=True)
+                                                      feature_extract=False,
+                                                      use_pretrained=True)
 
         # ckpt gpu->cpu
         model_ft.load_state_dict(torch.load(ckpt_path, map_location=lambda storage, loc: storage)['model'])
@@ -79,10 +79,7 @@ class DenseNet(nn.Module):
         # add the average global pool
         self.global_avg_pool = nn.AvgPool2d(kernel_size=7, stride=1)
 
-        # get the classifier of the vgg19
         self.classifier = self.densenet.classifier
-
-        # placeholder for the gradients
         self.gradients = None
 
     # hook for the gradients of the activations
@@ -106,6 +103,7 @@ class DenseNet(nn.Module):
 
     def get_activations(self, x):
         return self.features_conv(x)
+
 
 # 还没修改正确
 class ResNet(nn.Module):
@@ -153,7 +151,6 @@ class ResNet(nn.Module):
 
         # complete the forward pass
         x = self.avgpool(x)
-        x = x.view((1, -1))
         x = self.classifier(x)
 
         return x
