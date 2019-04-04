@@ -60,7 +60,7 @@ def plot_confusion_matrix(cm, classes, title, normalize=True, cmap=plt.cm.Blues)
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
         plt.text(j, i, format(cm[i, j], fmt),
                  horizontalalignment="center",
-                 fontsize=12,
+                 fontsize=18,
                  color="white" if cm[i, j] > thresh else "black")
 
     plt.ylabel('True label')
