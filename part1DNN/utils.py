@@ -45,9 +45,9 @@ def saveTrainCurve(val_acc, val_loss, train_acc, train_loss):
     plt.figure(figsize=(10, 10))
     plt.subplot(2, 1, 1)
 
-    plt.title(" Accuracy vs. Number of Training Epochs")
+    plt.title(" marco-R vs. Number of Training Epochs")
     plt.xlabel("Training Epochs")
-    plt.ylabel(" Accuracy")
+    plt.ylabel(" marco-R")
     # plt.grid(axis="y")
     plt.plot(range(1, num_epochs + 1), val_acc, label="validation")
     plt.plot(range(1, num_epochs + 1), train_acc, label="train")

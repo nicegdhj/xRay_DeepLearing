@@ -103,11 +103,17 @@ def get_descriptor(activations, heatmapThreshold=0.7, areaThreshold=0.05):
     return activations[0]
 
 
-if __name__ == '__main__':
+def end2endMaskFeature(get_train_dir=False):
+    '''
+    尘肺病端到端四分类CNN 提取细粒度病理特征
+    '''
+
     feature_pred = []
     feature_label = []
-
-    imgs = 'D:/workCode/data/xRay/dataset/copyBefore/val'
+    if get_train_dir:
+        imgs = 'D:/workCode/data/xRay/dataset/copyBefore/val'
+    else:
+        imgs = 'D:/workCode/data/xRay/dataset/copyBefore/train'
     ckpt = 'D:/workCode/xRay/local_LogAndCkpt/ckpt/densenet_34_ckpt_v1.pkl'
     num_classes = 4
     dataloader = data_input(imgs)
@@ -117,22 +123,6 @@ if __name__ == '__main__':
 
     for num, (img, label) in enumerate(dataloader):
         pred = model(img)
-        # 按label的cam提取mask特征
-        # pred[:, label].backward()
-        # # pull the gradients out of the model
-        # gradients = model.get_activations_gradient()
-        # # pool the gradients across the channels
-        # pooled_gradients = torch.mean(gradients, dim=[0, 2, 3])
-        # # get the activations of the last convolutional layer
-        # activations = model.get_activations(img).detach()
-        #
-        # # weight the channels by corresponding gradients
-        # b, c, h, w = activations.size()
-        # for i in range(c):
-        #     activations[:, i, :, :] *= pooled_gradients[i]
-        # masked_feature = get_descriptor(activations)
-        # img_sample = (masked_feature, label)
-        # feature_label.append(img_sample)
 
         # 按预测种类提取mask特征
         index = pred.argmax(dim=1)
@@ -150,8 +140,30 @@ if __name__ == '__main__':
 
         if (num + 1) % 100 == 0:
             print('=====>  ', num + 1, '  ====>imgs done')
+    # 训练集和测试集分两次执行获取
+    if get_train_dir:
+        label_mask_feature = open('D:/workCode/xRay/xRayData/mask_feature/copyBefore/label_mask/train_label_mask.pkl',
+                                  'wb')
+        pickle.dump(feature_label, label_mask_feature)
+    else:
+        pred_mask_feature = open('D:/workCode/xRay/xRayData/mask_feature/copyBefore/pred_mask/val_label_mask.pkl', 'wb')
+        pickle.dump(feature_pred, pred_mask_feature)
 
-    # label_mask_feature = open('D:/workCode/xRay/xRayData/mask_feature/copyBefore/label_mask/train_label_mask.pkl', 'wb')
-    # pickle.dump(feature_label, label_mask_feature)
-    pred_mask_feature = open('D:/workCode/xRay/xRayData/mask_feature/copyBefore/pred_mask/val_label_mask.pkl', 'wb')
-    pickle.dump(feature_pred, pred_mask_feature)
+
+def twoStepMaskFeature(get_train_dir=False):
+    """
+    尘肺病层级分类方法CNN 提取细粒度病理特征
+    分为两阶段，第一阶段图片如果预测正类几率超过0.4（1，2,3期）则进入下一阶段获取细粒度特征，若没超过则在第一阶段就计算病理特征
+    不要用代价敏感调整后打的模型
+    """
+    pass
+
+
+if __name__ == '__main__':
+    # 端到端模型提取细粒度病理特征
+    end2endMaskFeature(get_train_dir=False)
+    end2endMaskFeature(get_train_dir=True)
+
+    # 层级分类方法提取细粒度病理特征
+    # twoStepMaskFeature(get_train_dir=False)
+    # twoStepMaskFeature(get_train_dir=True)
