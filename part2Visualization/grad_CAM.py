@@ -93,7 +93,7 @@ def get_mask(heatMap, img, heatmapThreshold=0.75, areaThreshold=0.05):
 
 if __name__ == '__main__':
 
-    imgs = 'D:/workCode/xRay/xRay_DeepLearing/part3Visualization/single_data'
+    imgs = 'D:/workCode/xRay/xRay_DeepLearing/part2Visualization/single_data'
     ckpt = 'D:/workCode/xRay/local_LogAndCkpt/ckpt/densenet_26_ckpt.pkl'
     num_classes = 4
 
@@ -108,8 +108,8 @@ if __name__ == '__main__':
     pred = model(img)
     index = pred.argmax(dim=1)
     print(index)
-    # probility = F.softmax(torch.autograd.Variable(pred)).data
-    # print(probility)
+    probility = F.softmax(torch.autograd.Variable(pred)).data
+    print(probility)
     # index = 1
 
     pred[:, index].backward()
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     heatmap /= torch.max(heatmap)
 
     img = cv2.imread(
-        'D:/workCode/xRay/xRay_DeepLearing/part3Visualization/single_data/ele/img.jpg')
+        'D:/workCode/xRay/xRay_DeepLearing/part2Visualization/single_data/ele/img.jpg')
     heatmap = heatmap.numpy()
     heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
     # showHeatMap(heatmap)
