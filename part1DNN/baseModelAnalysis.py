@@ -21,7 +21,7 @@ from sklearn.metrics import recall_score
 
 from utils import initialize_model
 import flags
-import baseModelAnalysisDataset
+import myModelAnalysisDataset
 
 os.environ['CUDA_VISIBLE_DIVICE'] = '1'
 
@@ -43,7 +43,7 @@ def getDataLoader(data, isMyImagePathDataLoader=False):
     ])
 
     if isMyImagePathDataLoader:
-        datasetVal = baseModelAnalysisDataset.ImagePathDataset(path_1=data, transform=transform_val)
+        datasetVal = myModelAnalysisDataset.ImagePathDataset(path_1=data, transform=transform_val)
 
     else:
         datasetVal = datasets.ImageFolder(root=data, transform=transform_val)
@@ -154,13 +154,13 @@ def get_cnf_matrix():
     plt.figure()
     plot_confusion_matrix(cnf_matrix, classes=class_to_idx[0],
                           title='Confusion matrix, without normalization')
-    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/densenet_2_sensitive_num.png')
+    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/tables/twoStep/densenet_2_sensitive_num.png')
     plt.figure()
     plot_confusion_matrix(cnf_matrix, classes=class_to_idx[0], normalize=True,
                           title='Normalized confusion matrix')
 
     # plt.show()
-    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/twoStep/densenet_2_sensitive_rate.png')
+    plt.savefig('/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/tables/twoStep/densenet_2_sensitive_rate.png')
 
 
 def get_image_score():
@@ -205,7 +205,7 @@ def get_image_score():
 
     record_csv = pd.DataFrame({'path': y_image_path, 'label': y_true, 'predict': y_predict, 'score': y_predict_score})
     record_csv.to_csv(
-        '/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/cnf_matrix/record2step/4classesData_3classes_record_densenet33_sensitive.csv',
+        '/home/njuciairs/Hejia/xRay_DeepLearing/part1DNN/tables/cultPoint2stepResult/4classesData_3classes_record_densenet33_sensitive.csv',
         encoding='utf-8')
 
 
