@@ -223,7 +223,7 @@ if __name__ == '__main__':
     X = np.array(X)
     X = Normalizer().fit_transform(X)
 
-    # #step1: 网格搜索出最好的模型，这里最好用交互式编程
+    # #step1: 网格搜索出最好的模型，这里最好用交互式编程工具，spyder
     # estimator_cv, df_cv_results = slect_model_param(X, Y, 'rf')
     # print(df_cv_results)
 
